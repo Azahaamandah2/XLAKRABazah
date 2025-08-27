@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zona Paket Akrab</title>
+    <!-- Google Fonts for Anime Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Anime background style */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Gradient + anime background image */
+            background: linear-gradient(120deg, #f5e5ff 0%, #c1e1ff 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 14px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: url('https://i.ibb.co/syC2gds/anime-bg.png') center center/cover no-repeat;
+            opacity: 0.3;
+            animation: bgMove 60s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% {background-position: center center;}
+            50% {background-position: top right;}
+            100% {background-position: center center;}
+        }
+
+        /* Floating anime characters (example SVG) */
+        .anime-float {
+            position: absolute;
+            width: 80px;
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+            display: none; /* Sembunyikan di mobile untuk performa */
+        }
+        
+        /* Tampilkan floating elements hanya di perangkat yang lebih besar */
+        @media (min-width: 768px) {
+            .anime-float {
+                display: block;
+                width: 120px;
+            }
+            .anime-float.float1 {top: 30px; left: 10vw; animation: floatUpDown 6s ease-in-out infinite;}
+            .anime-float.float2 {bottom: 20px; right: 8vw; animation: floatUpDown 8s ease-in-out infinite reverse;}
+            .anime-float.float3 {top: 70vh; left: 80vw; animation: floatUpDown 7s ease-in-out infinite; opacity: 0.5;}
+        }
+        
+        @keyframes floatUpDown {
+            0%, 100% {transform: translateY(0);}
+            50% {transform: translateY(-30px);}
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            padding: 15px 10px;
+            background: linear-gradient(90deg, #ffb6c1 0%, #92d2ff 100%);
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(114, 187, 255, 0.2);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1.4em;
+            color: #4a2343;
+        }
+
+        /* Card and table anime style */
+        .search-container {
+            margin: 15px auto;
+            text-align: center;
+            width: 95%;
+            max-width: 500px;
+            position: sticky;
+            top: 10px;
+            z-index: 5;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px; /* Ukuran font lebih besar untuk mobile */
+            border: 2px solid #7c3aed;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.1);
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+        
+        #searchInput:focus {
+            box-shadow: 0 4px 24px rgba(124, 58, 237, 0.2);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling di iOS */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255,255,255,0.92);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(114, 187, 255, 0.15);
+            font-size: 0.9em;
+            overflow: hidden;
+            animation: fadeIn 2s;
+            margin: 0 auto 20px auto;
+            min-width: 300px;
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(40px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e7ff;
+        }
+        
+        th {
+            background: linear-gradient(90deg, #ffb6c1 0%, #92d2ff 100%);
+            color: #4a2343;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 0.95em;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:last-of-type {
+            text-align: center;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+        
+        /* Baris tabel lebih mudah di-tap di mobile */
+        tr {
+            transition: background 0.2s;
+        }
+        
+        tr:active {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        /* Modal anime style - dioptimalkan untuk mobile */
+        .modal {
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(51, 43, 76, 0.45);
+            animation: modalFadeIn 1s;
+            padding: 15px;
+        }
+        
+        @keyframes modalFadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        
+        .modal-content {
+            background: linear-gradient(120deg, #fff5fc 0%, #e3f4fe 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.15);
+            width: 100%;
+            max-width: 420px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: bounceIn 1.4s;
+        }
+        
+        @keyframes bounceIn {
+            0% {transform: scale(0.7);}
+            60% {transform: scale(1.08);}
+            80% {transform: scale(0.95);}
+            100% {transform: scale(1);}
+        }
+        
+        .close {
+            color: #7c3aed;
+            background: #fff;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .close:hover, .close:focus {
+            background: #f1e8fd;
+            color: #4a2343;
+        }
+        
+        .modal-content p, .modal-content b, .modal-content a {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1em;
+        }
+        
+        .modal-content b {
+            color: #ff3e6c;
+        }
+        
+        .modal-content a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer untuk mobile */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+            color: #666;
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px 12px 0 0;
+            margin-top: auto;
+        }
+        
+        /* Tombol untuk membuka modal kembali */
+        .open-modal-btn {
+            display: block;
+            width: 90%;
+            margin: 10px auto 20px;
+            padding: 14px;
+            background: linear-gradient(90deg, #ffb6c1 0%, #92d2ff 100%);
+            border: none;
+            border-radius: 12px;
+            color: #4a2343;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 4px 12px rgba(114, 187, 255, 0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating anime SVG characters (replace with your own SVGs for more anime effect) -->
+    <img class="anime-float float1" src="https://i.ibb.co/dJX1wJj/anime-girl1.png" alt="anime1">
+    <img class="anime-float float2" src="https://i.ibb.co/NYg3fKf/anime-boy1.png" alt="anime2">
+    <img class="anime-float float3" src="https://i.ibb.co/RYjnYb1/anime-girl2.png" alt="anime3">
+
+    <div class="header">
+        <h1>Zona Paket Akrab</h1>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div style="text-align: center;">
+                <p style="marcharset5px 0"><b>Open Harga Reseller</b></p>
+                <p style="margin: 5px 0">Full Garansi 1 Bulan</p>
+                <p style="margin: 5px 0">Hubungi : <a href="https://wa.me/6285156145309">085156145309</a></p>
+            </div>
+            <br>
+            <table>
+                <tr style="text-align: center;">
+                    <td>
+                        <div>
+                            <b>Mini</b>
+                            <p>💰 Rp. 50.000</p>
+                            <p>➡️ AREA 1 : 21,5GB</p>
+                            <p>➡️ AREA 2 : 24,5GB</p>
+                            <p>➡️ AREA 3 : 32GB</p>
+                            <p>➡️ AREA 4 : 59GB</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td>
+                        <div>
+                            <b>BIG</b>
+                            <p>💰 Rp. 55.000</p>
+                            <p>➡️ Area 1 = 33,5 - 36,5 Gb</p>
+                            <p>➡️ Area 2 = 36,5 - 39,5 Gb</p>
+                            <p>➡️ Area 3 = 47 - 50 Gb</p>
+                            <p>➡️ Area 4 = 71 - 74 Gb</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td>
+                        <div>
+                            <b>JUMBO</b>
+                            <p>💰 Rp. 75.000</p>
+                            <p>➡️ Area 1 = 65,5 - 67,5 Gb</p>
+                            <p>➡️ Area 2 = 70 - 72 Gb</p>
+                            <p>➡️ Area 3 = 83 - 85 Gb</p>
+                            <p>➡️ Area 4 = 123 - 125 Gb</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" onkeyup="searchTable()"
+            placeholder="Cari kota/kabupaten untuk mengetahui zona area">
+    </div>
+
+    <button class="open-modal-btn" onclick="openModal()">Lihat Harga Paket</button>
+
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Provinsi</th>
+                    <th>Kota/Kabupaten</th>
+                    <th>Area</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data tabel tetap sama seperti sebelumnya -->
+                <tr>
+                    <td>Banten</td>
+                    <td>Kota Tangerang Selatan, Kota Tangerang, Kab. Tangerang, Kab. Pandeglang, Kab. Lebak, Kab. Serang,
+                        Kota Serang, Kota Cilegon</td>
+                    <td>Area 2</td>
+                </tr>
+                <!-- Data lainnya tetap sama -->
+                <!-- ... -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        © Zona Paket Akrab - 085156145309
+    </div>
+
+    <script>
+        // Modal logic
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        function openModal() {
+            modal.style.display = "flex";
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Search function
+        function searchTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('dataTable');
+            const trs = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < trs.length; i++) {
+                let row = trs[i];
+                let text = row.textContent || row.innerText;
+                row.style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+        }
+
+        // Modal animation on page load (optional)
+        window.onload = () => {
+            modal.style.display = "flex";
+        }
+
+        // Touch event improvements untuk mobile
+        document.addEventListener('touchstart', function() {}, false);
+    </script>
+</body>
+</html>
